@@ -32,3 +32,11 @@ def test_apply_discount():
     Item.pay_rate = 0.5
     item.apply_discount()
     assert item.price == 2500
+
+def test_repr():
+    item1 = Item("Микроволновка", 20000, 20)
+    assert repr(item1) == "Item('Микроволновка', 20000, 20)"
+
+def test_str():
+    item2 = Item("Чайник", 4000, 20)
+    assert str(item2) == "Чайник"
