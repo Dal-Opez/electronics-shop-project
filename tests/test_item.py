@@ -8,11 +8,26 @@ from src.phone import Phone
 def class_example_fixture_1():
     return Item("Чайник", 5000, 10)
 
-def test_instantiate_from_csv():
+def test_instantiate_from_csv(capsys):
     Item.instantiate_from_csv()
     assert Item.all[0].name == "Смартфон"
     assert Item.all[0].price == "100"
     assert Item.all[0].quantity == "1"
+
+def test_instantiate_from_csv(capsys):
+    item = Item("Смартфон", 10000, 20)
+    Item.instantiate_from_csv()
+    assert item.name == 'Смартфон'
+    assert item.price == 10000
+    assert item.quantity == 20
+    #Для тестирования нужно в файле item.py раскомментировать имя файла для вызова соответствующего исключения
+    # captured = capsys.readouterr()
+    # assert captured.out == 'InstantiateCSVError: Файл "items_structure_error.csv" поврежден.\n'
+
+    captured = capsys.readouterr()
+    assert captured.out == 'FileNotFoundError: Файл "i_am_not_exist.txt" не найден.\n'
+
+
 
 def test_calculate_total_price():
     # pass

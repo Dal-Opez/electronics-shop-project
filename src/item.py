@@ -1,4 +1,18 @@
 import csv
+import os
+
+BASE_PATH = os.path.abspath("src")
+
+
+# FILE_NAME = "items_correct.csv"
+FILE_NAME = "i_am_not_exist.txt"
+# FILE_NAME = "items_structure_error.csv"
+FILE_PATH = os.path.join(BASE_PATH, FILE_NAME)  # Полноценный путь к файлу
+class InstantiateCSVError(Exception):
+
+    def __str__(self):
+        print(f'InstantiateCSVError: Файл "{FILE_NAME}" поврежден.')
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -44,13 +58,30 @@ class Item:
     def string_to_number(number):
         return int(float(number))
 
+
     @classmethod
     def instantiate_from_csv(cls):
-        with open("src/items.csv", "r", encoding='windows-1251') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                cls(row["name"], row["price"], row["quantity"])
+        # with open("src/items.csv", "r", encoding='windows-1251') as csvfile:
+        #     reader = csv.DictReader(csvfile)
+        #     for row in reader:
+        #         cls(row["name"], row["price"], row["quantity"])
+        try:
+            with open(FILE_PATH, "r", encoding="windows-1251") as csv_file:
+                reader = csv.DictReader(csv_file)
+                Item.all.clear()
+                correct_columns = ["name", "price", "quantity"]
+                if reader.fieldnames == correct_columns:
+                    for item in reader:
+                        cls(item['name'], item['price'], item['quantity'])
+                else:
+                    raise InstantiateCSVError
+        except InstantiateCSVError:
+            print(f'InstantiateCSVError: Файл "{FILE_NAME}" поврежден.')
+            # raise InstantiateCSVError
 
+        except FileNotFoundError:
+            print(f'FileNotFoundError: Файл "{FILE_NAME}" не найден.')
+            # raise FileNotFoundError(f'FileNotFoundError: Файл "{FILE_NAME}" не найден.')
 
 
 
